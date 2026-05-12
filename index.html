@@ -707,8 +707,8 @@
       send_error: 'Konnte nicht senden. Bitte später nochmal versuchen.',
       landing_badge: 'Hey, ich bin Moritz',
       landing_headline: 'Girlfriend Application.',
-      landing_sub1: "Willkommen zur vermutlich unnötig ernst genommenen Bewerbung. Dauer: 3 bis 4 Minuten.",
-      landing_sub2: "Nebenwirkungen können Ehrlichkeit, Charme und ein erstes Date beinhalten. Wenn du's ausfüllst, dann bitte so, dass es sich lohnt.",
+      landing_sub1: "Halb Witz, halb Filter. Dauer: 3 bis 4 Minuten.",
+      landing_sub2: "Nebenwirkungen können Ehrlichkeit, Charme und ein erstes Date beinhalten. Nimm's nicht zu ernst. Aber nicht zu wenig.",
       landing_cta: 'Bewerbung starten',
       landing_note: 'Antworten landen nur in meiner Inbox.',
       landing_trust: 'Empfohlen von',
@@ -754,8 +754,8 @@
       send_error: 'Could not send. Please try again later.',
       landing_badge: "Hey, I'm Moritz",
       landing_headline: 'Girlfriend Application.',
-      landing_sub1: 'Welcome to this probably unnecessarily serious application. Takes 3 to 4 minutes.',
-      landing_sub2: "Side effects may include honesty, charm and a first date. If you're doing this, make it worth it.",
+      landing_sub1: 'Half joke, half filter. Takes 3 to 4 minutes.',
+      landing_sub2: "Side effects may include honesty, charm and a first date. Don't take it too seriously. But not too lightly either.",
       landing_cta: 'Start application',
       landing_note: 'Answers go to my inbox only.',
       landing_trust: 'Endorsed by',
@@ -786,7 +786,7 @@
   };
 
   // ==================== State ====================
-  let STEPS = ['typ','adjektive','sonntag','schnellrunde','greenflags','interesse','love_lang','happy','date','comms','rueckfrage','message','kontakt'];
+  let STEPS = ['typ','adjektive','sonntag','schnellrunde','greenflags','interesse','love_lang','happy','date','comms','universe','rueckfrage','message','kontakt'];
 
   let screen = 'landing';
   let step = 0;
@@ -893,7 +893,7 @@
     happy: {
       type: 'single',
       question: { de:'Wie kann ich dich glücklich machen?',                en:'How can I make you happy?' },
-      subtitle: { de:'Such dir eins aus. Ich nehm das ernst.',              en:'Pick one. I take this seriously.' },
+      subtitle: { de:"Such dir eins aus. Spoiler: ich notier's mir.",       en:"Pick one. Spoiler: I'll note it down." },
       options: [
         { label:{ de:'Frühstück machen, bevor du wach bist',                en:'Make breakfast before you wake up' },
           sub:  { de:'Acts of Service, höchste Stufe.',                     en:'Acts of service, top tier.' },
@@ -967,10 +967,18 @@
           sub:  { de:'Soft launch sozusagen.',             en:'A soft launch, so to speak.' },             value:'Selektiv' }
       ]
     },
+    universe: {
+      type: 'text',
+      question:   { de:'Wenn du dem Universum eine Frage stellen könntest, welche?',  en:'If you could ask the universe one question, what would it be?' },
+      subtitle:   { de:'Egal ob existentiell oder absurd. Beides zählt.',              en:'Existential or absurd. Both count.' },
+      placeholder:{ de:'„Existieren wir wirklich?" oder „Warum schmeckt Koriander für manche nach Seife?"',
+                    en:"'Do we actually exist?' or 'Why does cilantro taste like soap to some people?'" },
+      minLength: 3
+    },
     rueckfrage: {
       type: 'text',
       question:   { de:'Überrasche mich mit einer Frage zurück.',                              en:'Surprise me with a question back.' },
-      subtitle:   { de:'Optional. Aber wenn du das hier ernst meinst, hast du eine.',           en:'Optional. But if you mean it, you have one.' },
+      subtitle:   { de:'Optional. Aber lustig, weird oder beides ist immer richtig.',           en:'Optional. But funny, weird or both is always right.' },
       placeholder:{ de:'z.B. „Wenn du dein Leben morgen umkrempeln müsstest, was würdest du als allererstes ändern?"',
                     en:"e.g. 'If you had to flip your life tomorrow, what's the first thing you'd change?'" },
       minLength: 0,
@@ -1432,6 +1440,7 @@
       date_wahl: singleValRaw('date'),
       date_text: ans.date_text || null,
       comms: singleValRaw('comms'),
+      universe: ans.universe || null,
       rueckfrage: ans.rueckfrage || null,
       message_type: recBlob ? recMode : (ans.messageText ? 'text' : null),
       message_text: ans.messageText || null,
