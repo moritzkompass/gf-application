@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Girlfriend Application — Moritz</title>
+<meta name="description" content="Eine Stelle. Faires Onboarding. Drei bis vier Minuten.">
+<meta property="og:title" content="Girlfriend Application — Moritz">
+<meta property="og:description" content="Eine Stelle. Faires Onboarding. Drei bis vier Minuten.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_AT">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --milk: #f8f1ec;
+    --white: #ffffff;
+    --black: #1a1411;
+    --text-soft: rgba(26,20,17,0.55);
+    --text-muted: rgba(26,20,17,0.35);
+    --brand: #2a1d18;
+    --brand-dark: #1a1411;
+    --accent: #c1543c;
+    --accent-soft: rgba(193,84,60,0.10);
+    --accent-line: rgba(193,84,60,0.5);
+    --line: #ece1d8;
+    --disabled: #c8b8a8;
+  }
+  html, body {
+    background: var(--milk);
+    color: var(--black);
+    font-family: 'Inter Tight', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
+    min-height: 100vh; min-height: 100dvh;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; min-height: 100dvh;
+    padding: 1.5rem 1.5rem 0;
+  }
+  .wlq-wrap-outer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  @media (max-width: 540px) {
+    body { padding: 0; }
+    .wlq-wrap-outer { align-items: stretch; }
+  }
+  .wlq-wrap {
+    width: 100%;
+    max-width: 540px;
+    background: var(--white);
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.03);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  @media (max-width: 540px) {
+    .wlq-wrap { max-width: 100%; min-height: 100dvh; border-radius: 0; box-shadow: none; }
+  }
+
+  /* Language Toggle */
+  .wlq-lang {
+    position: absolute;
+    top: 1.1rem;
+    right: 1.2rem;
+    display: inline-flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 999px;
+    background: rgba(26,20,17,0.05);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    z-index: 20;
+  }
+  .wlq-lang-opt {
+    padding: 3px 9px;
+    border-radius: 999px;
+    cursor: pointer;
+    color: var(--text-soft);
+    transition: all .2s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wlq-lang-opt:hover { color: var(--black); }
+  .wlq-lang-opt.active {
+    background: var(--brand);
+    color: var(--white);
+  }
+
+  .wlq-header {
+    padding: 1.25rem 5.5rem 0.75rem 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    flex-shrink: 0;
+  }
+  .wlq-back {
+    width: 32px; height: 32px;
+    border: none; background: transparent;
+    cursor: pointer; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-soft);
+    border-radius: 50%;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wlq-back:hover { background: rgba(42,29,24,0.05); color: var(--brand); }
+  .wlq-back svg { width: 18px; height: 18px; }
+  .wlq-back.hidden { visibility: hidden; }
+  .wlq-dots {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .wlq-dot {
+    flex: 1; height: 3px; border-radius: 2px;
+    background: var(--line);
+    transition: all 0.5s cubic-bezier(.16,1,.3,1);
+  }
+  .wlq-dot.done { background: var(--accent); }
+  .wlq-dot.current { background: var(--brand); }
+  .wlq-step {
+    padding: 1.25rem 1.75rem 2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    animation: stepIn 0.45s cubic-bezier(.16,1,.3,1);
+  }
+  @media (max-width: 540px) {
+    .wlq-step { padding: 1.25rem 1.5rem 2rem; }
+  }
+  @keyframes stepIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .wlq-time {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.1px;
+    margin-bottom: 1.25rem;
+    width: fit-content;
+  }
+  .wlq-time svg { width: 13px; height: 13px; }
+  .wlq-q {
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: -0.7px;
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+    text-wrap: balance;
+    color: var(--black);
+  }
+  .wlq-sub {
+    font-size: 0.93rem;
+    color: var(--text-soft);
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.1px;
+  }
+  .wlq-multi-hint {
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    letter-spacing: 0.2px;
+  }
+  .wlq-answers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .wlq-a {
+    padding: 1.05rem 1.15rem;
+    border: 1.5px solid var(--line);
+    border-radius: 0.75rem;
+    background: var(--white);
+    color: var(--black);
+    font-family: inherit;
+    font-size: 0.93rem;
+    font-weight: 500;
+    letter-spacing: -0.2px;
+    text-align: left;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 0.75rem;
+    transition: all 0.2s cubic-bezier(.16,1,.3,1);
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wlq-a:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .wlq-a.selected {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .wlq-ind {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--line);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .wlq-a:hover .wlq-ind { border-color: var(--accent); }
+  .wlq-a.selected .wlq-ind {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  .wlq-ind::after {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--white);
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .wlq-a.selected .wlq-ind::after { opacity: 1; }
+  .wlq-a.multi .wlq-ind { border-radius: 0.25rem; }
+  .wlq-a.multi.selected .wlq-ind::after {
+    width: 10px; height: 6px; border-radius: 0;
+    background: transparent;
+    border: 2px solid var(--white);
+    border-top: none; border-right: none;
+    transform: rotate(-45deg) translate(0, -1px);
+    opacity: 1;
+  }
+  .wlq-a-content { display: flex; flex-direction: column; gap: 0.18rem; flex: 1; }
+  .wlq-a-sub {
+    font-size: 0.78rem;
+    color: var(--text-soft);
+    font-weight: 400;
+    line-height: 1.4;
+  }
+  .wlq-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .wlq-chip {
+    padding: 0.65rem 1rem;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--black);
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(.16,1,.3,1);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wlq-chip:hover { border-color: var(--accent); }
+  .wlq-chip.selected {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--white);
+  }
+  .wlq-input {
+    width: 100%;
+    padding: 1.15rem 1.15rem;
+    border: 2px solid var(--line);
+    border-radius: 0.85rem;
+    font-family: inherit;
+    font-size: 1.02rem;
+    font-weight: 500;
+    background: var(--white);
+    color: var(--black);
+    outline: none;
+    transition: all 0.25s;
+  }
+  .wlq-input:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(42,29,24,0.06); }
+  .wlq-input::placeholder { color: var(--text-muted); font-weight: 400; }
+  .wlq-textarea {
+    width: 100%;
+    padding: 1.1rem 1.2rem;
+    border: 2px solid var(--line);
+    border-radius: 0.85rem;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    background: var(--white);
+    color: var(--black);
+    outline: none;
+    transition: border-color 0.2s;
+    min-height: 120px;
+    resize: vertical;
+  }
+  .wlq-textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(42,29,24,0.06); }
+  .wlq-textarea::placeholder { color: var(--text-muted); }
+  .wlq-cta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 1.55rem;
+    border: none;
+    border-radius: 1rem;
+    background: var(--disabled);
+    color: var(--white);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.15px;
+    cursor: not-allowed;
+    margin-top: 1.25rem;
+    transition: all 0.25s cubic-bezier(.16,1,.3,1);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wlq-cta.on {
+    background: var(--brand);
+    cursor: pointer;
+  }
+  .wlq-cta.on:hover {
+    background: var(--brand-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 26px rgba(42,29,24,0.22);
+  }
+  .wlq-cta svg {
+    width: 1.05rem; height: 1.05rem;
+    transition: transform 0.3s cubic-bezier(.16,1,.3,1);
+  }
+  .wlq-cta.on:hover svg { transform: translateX(4px); }
+  .wlq-fields { display: flex; flex-direction: column; gap: 0.95rem; }
+  .wlq-field label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-soft);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  .wlq-field-input {
+    width: 100%;
+    padding: 1rem 1.1rem;
+    border: 1.5px solid var(--line);
+    border-radius: 0.6rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    background: var(--white);
+    color: var(--black);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .wlq-field-input:focus { border-color: var(--accent); }
+  .wlq-field-input::placeholder { color: var(--text-muted); }
+  .wlq-skip {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-soft);
+    padding: 0.85rem;
+    text-align: center;
+    width: 100%;
+    margin-top: 0.5rem;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wlq-skip:hover { color: var(--brand); }
+  .wlq-rapid { display: flex; flex-direction: column; gap: 1.25rem; }
+  .wlq-rapid-item label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--black);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.2px;
+  }
+  .wlq-rapid-item input {
+    width: 100%;
+    padding: 0.95rem 1.1rem;
+    border: 1.5px solid var(--line);
+    border-radius: 0.6rem;
+    font-family: inherit;
+    font-size: 0.97rem;
+    background: var(--white);
+    color: var(--black);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .wlq-rapid-item input:focus { border-color: var(--accent); }
+  .wlq-rapid-item input::placeholder { color: var(--text-muted); font-weight: 400; }
+  .wlq-rec-toggle { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+  .wlq-rec-tab {
+    flex: 1;
+    padding: 0.85rem 0.5rem;
+    border: 1.5px solid var(--line);
+    border-radius: 0.6rem;
+    background: var(--white);
+    color: var(--text-soft);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wlq-rec-tab:hover { color: var(--black); border-color: var(--accent-line); }
+  .wlq-rec-tab.active {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--brand);
+    font-weight: 600;
+  }
+  .wlq-rec-tab svg { width: 15px; height: 15px; }
+  .wlq-rec-area {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 1.1rem; padding: 1rem 0;
+  }
+  .wlq-rec-btn {
+    width: 84px; height: 84px;
+    border-radius: 50%; border: none;
+    background: var(--brand); color: var(--white);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s cubic-bezier(.16,1,.3,1);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wlq-rec-btn:hover { background: var(--brand-dark); transform: scale(1.05); box-shadow: 0 10px 28px rgba(42,29,24,0.3); }
+  .wlq-rec-btn.recording {
+    background: #c1543c;
+    animation: rec-pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes rec-pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(193,84,60,0.4); }
+    50% { box-shadow: 0 0 0 16px rgba(193,84,60,0); }
+  }
+  .wlq-rec-btn svg { width: 28px; height: 28px; }
+  .wlq-rec-timer { font-size: 1.15rem; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--brand); }
+  .wlq-rec-label { font-size: 0.85rem; color: var(--text-soft); text-align: center; max-width: 280px; }
+  .wlq-rec-preview { width: 100%; }
+  .wlq-rec-preview audio { width: 100%; height: 44px; }
+  .wlq-rec-preview video { width: 100%; max-height: 240px; border-radius: 0.85rem; display: block; background: #000; }
+  .wlq-rec-actions { display: flex; gap: 0.55rem; width: 100%; margin-top: 0.5rem; }
+  .wlq-rec-action {
+    flex: 1;
+    padding: 0.85rem;
+    border: 1.5px solid var(--line);
+    border-radius: 0.6rem;
+    background: var(--white);
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wlq-rec-action:hover { border-color: var(--brand); color: var(--brand); }
+  .wlq-rec-action.del { color: #c0392b; border-color: rgba(192,57,43,0.2); }
+  .wlq-rec-action.del:hover { background: rgba(192,57,43,0.04); border-color: #c0392b; }
+  .wlq-success {
+    text-align: center;
+    padding: 2.5rem 1rem;
+  }
+  .wlq-success-icon {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  .wlq-success h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.6px;
+    margin-bottom: 0.6rem;
+    color: var(--black);
+    line-height: 1.2;
+  }
+  .wlq-success p {
+    color: var(--text-soft);
+    font-size: 0.93rem;
+    margin-bottom: 0.4rem;
+    line-height: 1.55;
+  }
+  .wlq-success p strong { color: var(--black); font-weight: 600; }
+  .wlq-success-actions {
+    display: flex; flex-direction: column; gap: 0.6rem;
+    max-width: 320px; margin: 1.75rem auto 0;
+  }
+  .wlq-trust-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem 1.25rem;
+    align-items: center;
+    justify-items: center;
+  }
+  .wlq-trust-logo {
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: var(--black);
+    text-align: center;
+    white-space: nowrap;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    opacity: 0.35;
+    transition: opacity 0.25s;
+  }
+  .wlq-trust-logo:hover { opacity: 0.7; }
+  .wlq-landing {
+    padding: 2.5rem 1.75rem 2rem;
+    display: flex; flex-direction: column;
+    align-items: center;
+    text-align: center;
+    animation: stepIn 0.55s cubic-bezier(.16,1,.3,1);
+  }
+  @media (max-width: 540px) {
+    .wlq-landing { padding: 2rem 1.5rem 1.75rem; }
+  }
+  .wlq-landing-photo {
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 32px rgba(42,29,24,0.18), 0 1px 3px rgba(0,0,0,0.06);
+    background: var(--milk);
+    position: relative;
+    display: grid; place-items: center;
+    font-size: 2.4rem;
+  }
+  .wlq-landing-photo::after {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 3px var(--white);
+    pointer-events: none;
+  }
+  .wlq-landing-badge {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.82rem; font-weight: 600;
+    letter-spacing: -0.1px;
+    margin-bottom: 1.25rem;
+  }
+  .wlq-landing-headline {
+    font-size: clamp(1.75rem, 5.4vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.13;
+    color: var(--black);
+    margin-bottom: 0.85rem;
+    text-wrap: balance;
+    max-width: 22ch;
+  }
+  .wlq-landing-sub {
+    font-size: 0.92rem;
+    color: var(--text-soft);
+    line-height: 1.55;
+    margin-bottom: 0.85rem;
+    max-width: 42ch;
+    text-wrap: balance;
+  }
+  .wlq-landing-sub-2 { margin-bottom: 1.85rem; }
+  .wlq-landing-cta {
+    display: inline-flex; align-items: center; gap: 0.65rem;
+    padding: 1.15rem 2.1rem;
+    border: none;
+    border-radius: 999px;
+    background: var(--brand);
+    color: var(--white);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.15px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(.16,1,.3,1);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wlq-landing-cta:hover {
+    background: var(--brand-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(42,29,24,0.25);
+  }
+  .wlq-landing-cta svg { width: 1rem; height: 1rem; transition: transform 0.3s; }
+  .wlq-landing-cta:hover svg { transform: translateX(4px); }
+  .wlq-landing-note {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 1rem;
+  }
+  .wlq-landing-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--line);
+    margin: 2.5rem 0 1.5rem;
+  }
+  .wlq-landing-trust-title {
+    font-size: 0.7rem;
+    color: var(--text-soft);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 1.4rem;
+  }
+  .wlq-landing-signature {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    width: 100%;
+    display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+  }
+  .wlq-landing-signature .name {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--black);
+    letter-spacing: -0.1px;
+  }
+  .wlq-landing-signature .role {
+    font-size: 0.74rem;
+    color: var(--text-soft);
+  }
+  .wlq-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 1.5rem 0.5rem;
+    font-size: 0.74rem;
+    color: var(--text-soft);
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    flex-shrink: 0;
+  }
+  .wlq-footer-links { display: flex; gap: 1.1rem; }
+  .wlq-footer a { color: var(--text-soft); text-decoration: none; transition: color 0.2s; cursor: pointer; }
+  .wlq-footer a:hover { color: var(--brand); }
+  @media (max-width: 540px) {
+    .wlq-footer { padding: 1.25rem 1.25rem 1.5rem; max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wlq-wrap-outer">
+  <div class="wlq-wrap">
+    <div class="wlq-lang" id="wlqLang">
+      <span class="wlq-lang-opt" data-lang="de" onclick="wlqSetLang('de')">DE</span>
+      <span class="wlq-lang-opt" data-lang="en" onclick="wlqSetLang('en')">EN</span>
+    </div>
+    <div class="wlq-header" id="wlqHeader" style="display:none">
+      <button class="wlq-back" id="wlqBack" onclick="wlqBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <div class="wlq-dots" id="wlqDots"></div>
+    </div>
+    <div id="wlqSteps"></div>
+  </div>
+</div>
+<footer class="wlq-footer">
+  <div id="wlqFooterCopy"></div>
+  <div class="wlq-footer-links" id="wlqFooterLinks"></div>
+</footer>
+
+<script>
+  const SUPABASE_URL = 'https://lwjyhsdlqpohnttxoacr.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3anloc2RscXBvaG50dHhvYWNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNjE4MTgsImV4cCI6MjA5MzgzNzgxOH0.c5EgX-Inzcb07WjeT0VXDmv7hAqoo5UGCvLf2ZeVQEA';
+  const CONTACT_EMAIL = 'kontakt@moritzkompass.at';
+
+  // ==================== i18n ====================
+  function detectInitialLang(){
+    try {
+      const stored = localStorage.getItem('gf_lang');
+      if(stored === 'de' || stored === 'en') return stored;
+      const nav = (navigator.language || 'de').slice(0,2).toLowerCase();
+      return nav === 'en' ? 'en' : 'de';
+    } catch(e){ return 'de'; }
+  }
+  let lang = detectInitialLang();
+
+  const STR = {
+    de: {
+      minutes_badge: 'Drei bis vier Minuten.',
+      multi_hint: 'Mehrfachauswahl. 3 bis 5 ist der Sweet Spot.',
+      next: 'Weiter',
+      skip: 'Überspringen',
+      rec_label_audio: 'Tippe zum Aufnehmen. Du kannst danach reinhören und neu starten.',
+      rec_label_video: 'Tippe zum Aufnehmen mit Kamera & Mikro. Du kannst danach reinhören und neu starten.',
+      rec_stop: 'Tippen zum Beenden.',
+      rec_perm_audio: 'Bitte erlaube den Zugriff auf das Mikrofon.',
+      rec_perm_video: 'Bitte erlaube den Zugriff auf Kamera und Mikrofon.',
+      rec_tab_voice: 'Sprache',
+      rec_tab_video: 'Video',
+      rec_tab_text: 'Text',
+      rec_msg_placeholder: 'Was du noch loswerden willst. Knapp oder ausführlich, ganz wie du magst.',
+      rec_delete: 'Löschen',
+      rec_new: 'Neu aufnehmen',
+      contact_name: 'Wie heißt du?',
+      contact_name_ph: 'Vorname reicht',
+      contact_reach: 'Wo erreich ich dich immer?',
+      contact_reach_ph: '@dein_handle, Email oder Nummer',
+      submit_btn: 'Bewerbung abschicken',
+      send_error: 'Konnte nicht senden. Bitte später nochmal versuchen.',
+      landing_badge: 'Hey, ich bin Moritz',
+      landing_headline: 'Girlfriend Application.',
+      landing_sub1: "Willkommen zur vermutlich unnötig ernst genommenen Bewerbung. Dauer: 3 bis 4 Minuten.",
+      landing_sub2: "Nebenwirkungen können Ehrlichkeit, Charme und ein erstes Date beinhalten. Wenn du's ausfüllst, dann bitte so, dass es sich lohnt.",
+      landing_cta: 'Bewerbung starten',
+      landing_note: 'Antworten landen nur in meiner Inbox.',
+      landing_trust: 'Empfohlen von',
+      landing_role: 'single · zwischen Wien & Graz · 2026',
+      trust1: 'Meine Mama',
+      trust2: 'Beste Freund',
+      trust3: 'Schwester',
+      trust4: 'Therapeutin',
+      trust5: 'ChatGPT',
+      trust6: 'Hinge-Algo',
+      success_title: 'Bewerbung angekommen',
+      success_p1: 'Deine Antworten sind bei mir gelandet.',
+      success_label: 'Was passiert jetzt?',
+      success_p2: 'Ich lese das in Ruhe. Wenn es passt, melde ich mich persönlich. Innerhalb von drei Tagen.',
+      success_restart: 'Nochmal von vorne',
+      footer_copyright: '© 2026 · ein Augenzwinkern, kein HR-Verfahren',
+      footer_imprint: 'Impressum',
+      footer_privacy: 'Datenschutz',
+      footer_imprint_alert: 'Lol das ist ein Witz. Aber du bist nett, dass du gefragt hast.',
+      footer_privacy_alert: 'Antworten landen nur in meiner Inbox. Versprochen.'
+    },
+    en: {
+      minutes_badge: 'Three to four minutes.',
+      multi_hint: 'Multi-select. 3 to 5 is the sweet spot.',
+      next: 'Next',
+      skip: 'Skip',
+      rec_label_audio: 'Tap to record. Listen back, re-do anytime.',
+      rec_label_video: 'Tap to record with camera & mic. Listen back, re-do anytime.',
+      rec_stop: 'Tap to stop.',
+      rec_perm_audio: 'Please allow microphone access.',
+      rec_perm_video: 'Please allow camera and microphone access.',
+      rec_tab_voice: 'Voice',
+      rec_tab_video: 'Video',
+      rec_tab_text: 'Text',
+      rec_msg_placeholder: 'Anything else you want to share. Short or long, whatever feels right.',
+      rec_delete: 'Delete',
+      rec_new: 'Re-record',
+      contact_name: "What's your name?",
+      contact_name_ph: 'First name is enough',
+      contact_reach: 'Where can I reach you?',
+      contact_reach_ph: '@yourhandle, email or number',
+      submit_btn: 'Submit application',
+      send_error: 'Could not send. Please try again later.',
+      landing_badge: "Hey, I'm Moritz",
+      landing_headline: 'Girlfriend Application.',
+      landing_sub1: 'Welcome to this probably unnecessarily serious application. Takes 3 to 4 minutes.',
+      landing_sub2: "Side effects may include honesty, charm and a first date. If you're doing this, make it worth it.",
+      landing_cta: 'Start application',
+      landing_note: 'Answers go to my inbox only.',
+      landing_trust: 'Endorsed by',
+      landing_role: 'single · between Vienna & Graz · 2026',
+      trust1: 'My Mom',
+      trust2: 'Best Friend',
+      trust3: 'Sister',
+      trust4: 'Therapist',
+      trust5: 'ChatGPT',
+      trust6: 'Hinge Algo',
+      success_title: 'Application received',
+      success_p1: 'Your answers landed with me.',
+      success_label: 'What happens next?',
+      success_p2: "I'll read it properly. If it clicks, I'll reach out personally within three days.",
+      success_restart: 'Start over',
+      footer_copyright: '© 2026 · a wink, not an HR process',
+      footer_imprint: 'Imprint',
+      footer_privacy: 'Privacy',
+      footer_imprint_alert: 'Lol this is a joke. But sweet of you to ask.',
+      footer_privacy_alert: 'Answers go to my inbox only. Promise.'
+    }
+  };
+  const t = (key) => (STR[lang] && STR[lang][key]) || STR.de[key] || '';
+  const loc = (val) => {
+    if(val == null) return '';
+    if(typeof val === 'string') return val;
+    return val[lang] || val.de || val.en || '';
+  };
+
+  // ==================== State ====================
+  const STEPS = ['typ','adjektive','sonntag','schnellrunde','greenflags','interesse','love_lang','happy','date','comms','rueckfrage','message','kontakt'];
+
+  let screen = 'landing';
+  let step = 0;
+  const ans = { adjektive: [], rapid: { lieblingswort:'', ohrwurm:'', bag:'' } };
+  const formData = { name:'', kontakt:'' };
+  let recMode = 'voice', mediaRec=null, recChunks=[], recBlob=null, recUrl=null, recTimer=null, recSecs=0, recStream=null;
+  let submitted = false;
+  let ac = null;
+
+  // Adjektive — bilingual
+  const ADJEKTIVE = [
+    { de:'aufgeschlossen',   en:'open-minded' },
+    { de:'sarkastisch',      en:'sarcastic' },
+    { de:'empathisch',       en:'empathetic' },
+    { de:'spontan',          en:'spontaneous' },
+    { de:'ehrgeizig',        en:'ambitious' },
+    { de:'aufmerksam',       en:'attentive' },
+    { de:'zuverlässig',      en:'reliable' },
+    { de:'ungeduldig',       en:'impatient' },
+    { de:'stur',             en:'stubborn' },
+    { de:'abenteuerlustig',  en:'adventurous' },
+    { de:'chaotisch',        en:'chaotic' },
+    { de:'optimistisch',     en:'optimistic' },
+    { de:'direkt',           en:'direct' },
+    { de:'verträumt',        en:'dreamy' },
+    { de:'loyal',            en:'loyal' },
+    { de:'laut',             en:'loud' },
+    { de:'leise',            en:'quiet' }
+  ];
+
+  // ==================== Quiz Content ====================
+  const STEP_DATA = {
+    typ: {
+      type: 'single',
+      question: { de:'Was suchst du hier eigentlich?',           en:"So what are you actually here for?" },
+      subtitle: { de:'Ehrlich. Erspart uns beiden Zeit.',         en:'Be honest. Saves us both time.' },
+      options: [
+        { label:{ de:'Eine Beziehung',                en:'A relationship' },                value:'Beziehung' },
+        { label:{ de:'Was Loses, mal sehen wohin',    en:"Something casual, let's see" },   value:'Situationship' },
+        { label:{ de:'Spaß, kein Stress',             en:'Fun, no stress' },                value:'FWB' },
+        { label:{ de:'Eine neue Freundschaft',        en:'A new friendship' },              value:'Freundschaft' },
+        { label:{ de:'Keine Ahnung, bin offen',       en:'No clue, just open' },            value:'Unklar' }
+      ]
+    },
+    adjektive: {
+      type: 'chips',
+      question: { de:'So würdest du dich beschreiben:',          en:"That's how you'd describe yourself:" },
+      subtitle: { de:'Such drei bis fünf raus. Lieber ehrlich als beeindruckend.', en:'Pick three to five. Honest beats impressive.' }
+    },
+    sonntag: {
+      type: 'single',
+      question: { de:'Sonntag, 11 Uhr.\nWas machst du?',         en:'Sunday, 11 AM.\nWhat are you doing?' },
+      subtitle: { de:'Verrät tatsächlich am meisten. Wirklich.',  en:'Honestly tells me the most. Really.' },
+      options: [
+        { label:{ de:'Brunch mit zu vielen Carbs',                         en:'Brunch with too many carbs' },                          value:'Brunch' },
+        { label:{ de:'Noch im Bett, scrolle TikTok',                       en:'Still in bed, scrolling TikTok' },                      value:'Bett' },
+        { label:{ de:'Wandern, Coldplunge. Ich bin diszipliniert.',        en:'Hiking, coldplunge. I am disciplined.' },               value:'Diszipliniert' },
+        { label:{ de:'Im Café, Buch, leise melancholisch aus dem Fenster', en:'In a café, book, quietly melancholic out the window' }, value:'Cafe' },
+        { label:{ de:'Mit Freundinnen alles vom Wochenende durchgehen',    en:'With friends, processing the whole weekend' },          value:'Freundinnen' }
+      ]
+    },
+    schnellrunde: {
+      type: 'rapid',
+      question: { de:'Schnellrunde.',                                                en:'Quick round.' },
+      subtitle: { de:'Drei kurze. Erstes was dir einfällt.',                          en:'Three quick ones. First thing that comes to mind.' },
+      fields: [
+        { key:'lieblingswort', label:{ de:'Dein Lieblingswort',           en:'Your favorite word' },           placeholder:{ de:'z.B. „eh"', en:"e.g. 'vibe'" } },
+        { key:'ohrwurm',       label:{ de:'Dein letzter Ohrwurm',         en:'Your last earworm' },             placeholder:{ de:'Song + Artist reicht', en:'Song + artist is enough' } },
+        { key:'bag',           label:{ de:'Das hast du immer dabei',      en:"What you always have on you" },   placeholder:{ de:'Kopfhörer, Lipbalm, ein Buch…', en:'Headphones, lip balm, a book…' } }
+      ]
+    },
+    greenflags: {
+      type: 'text',
+      question:   { de:'Drei deiner Green Flags.',                            en:'Three of your green flags.' },
+      subtitle:   { de:'Die Sachen, die mir auffallen werden, wenn ich Glück habe.', en:"The things I'll notice if I get lucky." },
+      placeholder:{ de:'Ich antworte auf Nachrichten in unter 12h. Ich kann Niederlagen zugeben. Ich kann kochen ohne Rezept…',
+                    en:'I reply to messages within 12 hours. I can admit defeat. I can cook without a recipe…' },
+      minLength: 3
+    },
+    interesse: {
+      type: 'text',
+      question:   { de:'Daran erkenne ich, dass du wirklich Interesse hast:', en:"This is how I'll know you're actually interested:" },
+      subtitle:   { de:'Dein persönlicher Tell. Verrate ihn ruhig.',           en:'Your personal tell. Feel free to spill.' },
+      placeholder:{ de:'Ich schick dir Memes die nur du verstehst.',           en:'I send you memes only you would get.' },
+      minLength: 3
+    },
+    love_lang: {
+      type: 'single',
+      question: { de:'Was ist deine Love Language?',                en:'What is your love language?' },
+      subtitle: { de:'Wonach blühst du auf?',                       en:'What makes you bloom?' },
+      options: [
+        { label:{ de:'Worte der Anerkennung', en:'Words of Affirmation' },
+          sub:  { de:'Sag mir, was du an mir magst.',                   en:'Tell me what you love about me.' },               value:'Words of Affirmation' },
+        { label:{ de:'Zeit zu zweit',         en:'Quality Time' },
+          sub:  { de:'Volle Aufmerksamkeit. Kein Handy.',               en:'Full attention. No phone.' },                     value:'Quality Time' },
+        { label:{ de:'Hilfsbereitschaft',     en:'Acts of Service' },
+          sub:  { de:'Etwas für mich tun, ohne dass ich fragen muss.',  en:'Doing things for me without being asked.' },      value:'Acts of Service' },
+        { label:{ de:'Zärtlichkeit',          en:'Physical Touch' },
+          sub:  { de:'Berührung, Umarmung, Nähe.',                      en:'Touch, hugs, closeness.' },                       value:'Physical Touch' },
+        { label:{ de:'Geschenke',             en:'Receiving Gifts' },
+          sub:  { de:'Kleine Aufmerksamkeiten. An mich gedacht.',       en:'Small thoughtful gestures. Thinking of me.' },    value:'Receiving Gifts' }
+      ]
+    },
+    happy: {
+      type: 'text',
+      question:   { de:'Wie kann ich dich glücklich machen?',                                              en:'How can I make you happy?' },
+      subtitle:   { de:"Mach's mir leicht. Konkrete Sachen schlagen Floskeln.",                           en:'Make it easy for me. Concrete beats clichés.' },
+      placeholder:{ de:'Wenn ich dir ohne Anlass deine Lieblingsblumen mitbringe. Wenn du heimkommst und das Essen schon fertig ist…',
+                    en:'Bringing you your favorite flowers for no reason. Coming home to dinner already made…' },
+      minLength: 3
+    },
+    date: {
+      type: 'single',
+      question: { de:'Welches Date plane ich für uns?',                    en:'Which date should I plan for us?' },
+      subtitle: { de:'Such dir eins aus. Ich kümmere mich um den Rest. Wirklich.', en:'Pick one. I handle the rest. Really.' },
+      options: [
+        { label:{ de:'Abendessen',                                en:'Dinner' },
+          sub:  { de:'Reservierung mach ich. Du bringst Hunger und Geschichten mit.',
+                  en:"I'll book it. You bring appetite and stories." },                       value:'Abendessen' },
+        { label:{ de:'City Trip',                                 en:'City trip' },
+          sub:  { de:'Wochenende weg. Irgendwo, wo wir beide noch nicht waren.',
+                  en:"Weekend away. Somewhere neither of us has been." },                     value:'City Trip' },
+        { label:{ de:'Pottery, Painting oder Lego bauen',         en:'Pottery, painting or building Lego' },
+          sub:  { de:'Hands-on, low-stakes, garantiert eine gute Geschichte später.',
+                  en:'Hands-on, low-stakes, guaranteed a good story later.' },                value:'Pottery/Painting/Lego' },
+        { label:{ de:'Sonntag früh raus & wandern',               en:'Early Sunday & hiking' },
+          sub:  { de:'Berge, Thermoskanne, gute Schuhe. Frühaufsteher only.',
+                  en:'Mountains, thermos, good shoes. Early risers only.' },                  value:'Wandern' },
+        { label:{ de:'Karaoke',                                   en:'Karaoke' },
+          sub:  { de:'Mut beweisen, peinlich werden, nur zu zweit.',
+                  en:'Prove courage, get embarrassed, just the two of us.' },                 value:'Karaoke' },
+        { label:{ de:'Ich koche für dich. Oder wir kochen zusammen.', en:"I'll cook for you. Or we cook together." },
+          sub:  { de:'Bold Move, ich weiß. Aber ich kann kochen.',
+                  en:'Bold move, I know. But I can cook.' },                                  value:'Kochen' },
+        { label:{ de:'Museum',                                    en:'Museum' },
+          sub:  { de:'Was Schönes anschauen, danach zwei Stunden darüber reden.',
+                  en:'See something good, then talk about it for two hours.' },               value:'Museum' },
+        { label:{ de:'Überrasch mich. Was wäre dein Move?',       en:'Surprise me. What would your move be?' },
+          sub:  { de:'Bonus-Frage. Falls du lieber selber planst.',
+                  en:'Bonus question. In case you prefer planning yourself.' },               value:'Überraschung', allowText:true }
+      ]
+    },
+    comms: {
+      type: 'single',
+      question: { de:'Sprachnachricht oder Text?',                   en:'Voice notes or text?' },
+      subtitle: { de:'Verrät mehr als jede Bio.',                     en:'Reveals more than any bio.' },
+      options: [
+        { label:{ de:'Voicenotes, immer',                  en:'Voice notes, always' },
+          sub:  { de:'Ich rede schneller als ich tippe.',  en:'I talk faster than I type.' },               value:'Voicenotes' },
+        { label:{ de:'Text. Voicenotes sind Verbrechen.',  en:'Text. Voice notes are a crime.' },
+          sub:  { de:'Knapp und klar. Respektiere ich.',   en:'Short and clear. Respect that.' },          value:'Text' },
+        { label:{ de:'Kommt auf die Stimmung an',          en:'Depends on the mood' },
+          sub:  { de:'Diplomatisch. Auch ok.',             en:'Diplomatic. Also fine.' },                  value:'Beides' },
+        { label:{ de:'Voicenotes nur an die Lieben',       en:'Voice notes only for the loved ones' },
+          sub:  { de:'Soft launch sozusagen.',             en:'A soft launch, so to speak.' },             value:'Selektiv' }
+      ]
+    },
+    rueckfrage: {
+      type: 'text',
+      question:   { de:'Überrasche mich mit einer Frage zurück.',                              en:'Surprise me with a question back.' },
+      subtitle:   { de:'Optional. Aber wenn du das hier ernst meinst, hast du eine.',           en:'Optional. But if you mean it, you have one.' },
+      placeholder:{ de:'z.B. „Wenn du dein Leben morgen umkrempeln müsstest, was würdest du als allererstes ändern?"',
+                    en:"e.g. 'If you had to flip your life tomorrow, what's the first thing you'd change?'" },
+      minLength: 0,
+      skipable: true
+    },
+    message: {
+      type: 'message',
+      question: { de:'Erzähl mir, wer du bist.',                                  en:'Tell me who you are.' },
+      subtitle: { de:'Sprache, Video oder Text. Voice und Video sind ehrlicher. Kein Muss.',
+                  en:'Voice, video or text. Voice and video are more honest. Not required.' },
+      skipable: true
+    },
+    kontakt: {
+      type: 'contact',
+      question: { de:'Wohin schick ich dir die Rückmeldung?',          en:'Where should I send my reply?' },
+      subtitle: { de:'Letzter Schritt. Versprochen.',                    en:'Last step. Promise.' }
+    }
+  };
+
+  // ==================== Icons ====================
+  const I = {
+    arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
+    clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+    check: '<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>',
+    cam: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>',
+    pen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>',
+    stop: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>'
+  };
+
+  // ==================== Helpers ====================
+  const el = id => document.getElementById(id);
+  const fmtTime = s => Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60);
+  function escHtml(s){
+    if(s==null) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  function snd(type){
+    try {
+      if(!ac) ac = new (window.AudioContext||window.webkitAudioContext)();
+      const now = ac.currentTime, g = ac.createGain(); g.connect(ac.destination);
+      const o = ac.createOscillator(); o.type='sine'; o.connect(g);
+      if(type==='sel'){ o.frequency.setValueAtTime(880,now); o.frequency.exponentialRampToValueAtTime(1200,now+.04); g.gain.setValueAtTime(.07,now); g.gain.exponentialRampToValueAtTime(.001,now+.1); o.start(now); o.stop(now+.1); }
+      else if(type==='ms'){ o.frequency.setValueAtTime(1100,now); o.frequency.exponentialRampToValueAtTime(1400,now+.03); g.gain.setValueAtTime(.05,now); g.gain.exponentialRampToValueAtTime(.001,now+.07); o.start(now); o.stop(now+.07); }
+      else if(type==='ds'){ o.frequency.setValueAtTime(600,now); o.frequency.exponentialRampToValueAtTime(400,now+.05); g.gain.setValueAtTime(.04,now); g.gain.exponentialRampToValueAtTime(.001,now+.08); o.start(now); o.stop(now+.08); }
+      else if(type==='nxt'){ o.frequency.setValueAtTime(400,now); o.frequency.exponentialRampToValueAtTime(800,now+.12); g.gain.setValueAtTime(.05,now); g.gain.exponentialRampToValueAtTime(.001,now+.18); o.start(now); o.stop(now+.18); }
+    } catch(e){}
+  }
+
+  // ==================== Language Toggle ====================
+  window.wlqSetLang = function(newLang){
+    if(newLang !== 'de' && newLang !== 'en') return;
+    if(newLang === lang) return;
+    lang = newLang;
+    try { localStorage.setItem('gf_lang', lang); } catch(e){}
+    document.documentElement.lang = lang;
+    renderLangToggle();
+    renderFooter();
+    render();
+  };
+
+  function renderLangToggle(){
+    document.querySelectorAll('.wlq-lang-opt').forEach(o => {
+      o.classList.toggle('active', o.getAttribute('data-lang') === lang);
+    });
+  }
+
+  function renderFooter(){
+    el('wlqFooterCopy').textContent = t('footer_copyright');
+    el('wlqFooterLinks').innerHTML =
+      '<a onclick="alert(STR[lang].footer_imprint_alert)">' + escHtml(t('footer_imprint')) + '</a>' +
+      '<a onclick="alert(STR[lang].footer_privacy_alert)">' + escHtml(t('footer_privacy')) + '</a>';
+  }
+
+  // ==================== Render ====================
+  function renderLanding(){
+    el('wlqHeader').style.display = 'none';
+    el('wlqSteps').innerHTML = ''
+      + '<div class="wlq-landing">'
+      + '<div class="wlq-landing-photo">👋🏻</div>'
+      + '<div class="wlq-landing-badge">' + escHtml(t('landing_badge')) + '</div>'
+      + '<h1 class="wlq-landing-headline">' + escHtml(t('landing_headline')) + '</h1>'
+      + '<p class="wlq-landing-sub">' + escHtml(t('landing_sub1')) + '</p>'
+      + '<p class="wlq-landing-sub wlq-landing-sub-2">' + escHtml(t('landing_sub2')) + '</p>'
+      + '<button class="wlq-landing-cta" onclick="wlqStartQuiz()">' + escHtml(t('landing_cta')) + ' ' + I.arrow + '</button>'
+      + '<div class="wlq-landing-note">' + escHtml(t('landing_note')) + '</div>'
+      + '<div class="wlq-landing-divider"></div>'
+      + '<div class="wlq-landing-trust-title">' + escHtml(t('landing_trust')) + '</div>'
+      + '<div class="wlq-trust-grid">'
+      +   '<div class="wlq-trust-logo">' + escHtml(t('trust1')) + '</div>'
+      +   '<div class="wlq-trust-logo">' + escHtml(t('trust2')) + '</div>'
+      +   '<div class="wlq-trust-logo">' + escHtml(t('trust3')) + '</div>'
+      +   '<div class="wlq-trust-logo">' + escHtml(t('trust4')) + '</div>'
+      +   '<div class="wlq-trust-logo">' + escHtml(t('trust5')) + '</div>'
+      +   '<div class="wlq-trust-logo">' + escHtml(t('trust6')) + '</div>'
+      + '</div>'
+      + '<div class="wlq-landing-signature">'
+      +   '<div class="name">Moritz Kompaß</div>'
+      +   '<div class="role">' + escHtml(t('landing_role')) + '</div>'
+      + '</div>'
+      + '</div>';
+  }
+
+  window.wlqStartQuiz = function(){
+    screen = 'quiz';
+    step = 0;
+    snd('nxt');
+    render();
+  };
+  window.wlqBackToLanding = function(){
+    screen = 'landing'; step = 0; render();
+  };
+
+  function render(){
+    if(screen === 'landing'){ renderLanding(); return; }
+    el('wlqHeader').style.display = '';
+    const total = STEPS.length;
+    el('wlqBack').classList.toggle('hidden', step>=total);
+    let dots=''; for(let i=0;i<total;i++) dots+='<span class="wlq-dot'+(i<step?' done':i===step?' current':'')+'"></span>';
+    el('wlqDots').innerHTML = dots;
+
+    if(step >= total){ renderSuccess(); return; }
+    const id = STEPS[step];
+    const sd = STEP_DATA[id];
+    let h = '<div class="wlq-step">';
+
+    if(step === 0) h += '<div class="wlq-time">' + I.clock + ' ' + escHtml(t('minutes_badge')) + '</div>';
+    h += '<div class="wlq-q">' + escHtml(loc(sd.question)).replace(/\n/g,'<br>') + '</div>';
+    h += '<div class="wlq-sub">' + escHtml(loc(sd.subtitle)) + '</div>';
+
+    if(sd.type === 'single'){
+      h += '<div class="wlq-answers">';
+      sd.options.forEach((o,i)=>{
+        const sel = ans[id]===i ? ' selected' : '';
+        h += '<button class="wlq-a'+sel+'" onclick="wlqSingle(\''+id+'\','+i+')">'
+          + '<span class="wlq-ind"></span>'
+          + '<span class="wlq-a-content"><span>' + escHtml(loc(o.label)) + '</span>'
+          + (o.sub ? '<span class="wlq-a-sub">' + escHtml(loc(o.sub)) + '</span>' : '')
+          + '</span>'
+          + '</button>';
+      });
+      h += '</div>';
+      const selected = (ans[id] !== undefined) ? sd.options[ans[id]] : null;
+      if(selected && selected.allowText){
+        const phDe = lang==='en' ? "Tell me, I'm curious." : "Verrat's mir. Ich bin neugierig.";
+        h += '<div style="margin-top:0.65rem"><input class="wlq-field-input" id="wlqSingleText" placeholder="' + escHtml(phDe) + '" value="' + escHtml(ans[id+'_text']||'') + '"></div>';
+        h += '<button id="wlqSingleCta" class="wlq-cta'+(ans[id+'_text']?' on':'')+'" onclick="snd(\'nxt\');wlqNext()">' + escHtml(t('next')) + ' ' + I.arrow + '</button>';
+      }
+    }
+    else if(sd.type === 'chips'){
+      h += '<div class="wlq-multi-hint">' + escHtml(t('multi_hint')) + '</div>';
+      h += '<div class="wlq-chips">';
+      ADJEKTIVE.forEach((w,i)=>{
+        const sel = ans.adjektive.includes(i) ? ' selected' : '';
+        h += '<button class="wlq-chip'+sel+'" onclick="wlqChip('+i+')">' + escHtml(loc(w)) + '</button>';
+      });
+      h += '</div>';
+      h += '<button class="wlq-cta'+(ans.adjektive.length>0?' on':'')+'" onclick="snd(\'nxt\');wlqNext()">' + escHtml(t('next')) + ' ' + I.arrow + '</button>';
+    }
+    else if(sd.type === 'rapid'){
+      h += '<div class="wlq-rapid">';
+      sd.fields.forEach(f => {
+        h += '<div class="wlq-rapid-item">';
+        h += '<label>' + escHtml(loc(f.label)) + '</label>';
+        h += '<input type="text" id="rapid_'+f.key+'" placeholder="' + escHtml(loc(f.placeholder)) + '" value="' + escHtml(ans.rapid[f.key]||'') + '">';
+        h += '</div>';
+      });
+      h += '</div>';
+      h += '<button id="wlqRapidCta" class="wlq-cta on" onclick="snd(\'nxt\');wlqNext()">' + escHtml(t('next')) + ' ' + I.arrow + '</button>';
+    }
+    else if(sd.type === 'text'){
+      h += '<textarea class="wlq-textarea" id="wlqText" placeholder="' + escHtml(loc(sd.placeholder)) + '">' + escHtml(ans[id]||'') + '</textarea>';
+      const required = (sd.minLength||0) > 0;
+      const initOn = !required || (ans[id] && ans[id].trim().length >= sd.minLength);
+      h += '<button id="wlqTextCta" class="wlq-cta'+(initOn?' on':'')+'" onclick="snd(\'nxt\');wlqNext()">' + escHtml(t('next')) + ' ' + I.arrow + '</button>';
+      if(sd.skipable){
+        h += '<button class="wlq-skip" onclick="ans[\''+id+'\']=\'\';snd(\'nxt\');wlqNext()">' + escHtml(t('skip')) + '</button>';
+      }
+    }
+    else if(sd.type === 'message'){
+      if(recMode !== 'voice' && recMode !== 'video' && recMode !== 'text') recMode = 'voice';
+      h += '<div class="wlq-rec-toggle">';
+      h += '<button class="wlq-rec-tab'+(recMode==='voice'?' active':'')+'" onclick="wlqRecMode(\'voice\')">' + I.mic + ' ' + escHtml(t('rec_tab_voice')) + '</button>';
+      h += '<button class="wlq-rec-tab'+(recMode==='video'?' active':'')+'" onclick="wlqRecMode(\'video\')">' + I.cam + ' ' + escHtml(t('rec_tab_video')) + '</button>';
+      h += '<button class="wlq-rec-tab'+(recMode==='text'?' active':'')+'" onclick="wlqRecMode(\'text\')">' + I.pen + ' ' + escHtml(t('rec_tab_text')) + '</button>';
+      h += '</div>';
+      h += '<div class="wlq-rec-area" id="wlqRecArea"></div>';
+      h += '<button class="wlq-skip" id="wlqMsgSkip" onclick="snd(\'nxt\');wlqNext()">' + escHtml(t('skip')) + '</button>';
+    }
+    else if(sd.type === 'contact'){
+      h += '<div class="wlq-fields">';
+      h += '<div class="wlq-field"><label>' + escHtml(t('contact_name')) + '</label><input class="wlq-field-input" id="wlqName" placeholder="' + escHtml(t('contact_name_ph')) + '" value="' + escHtml(formData.name) + '"></div>';
+      h += '<div class="wlq-field"><label>' + escHtml(t('contact_reach')) + '</label><input class="wlq-field-input" id="wlqKontakt" placeholder="' + escHtml(t('contact_reach_ph')) + '" value="' + escHtml(formData.kontakt) + '"></div>';
+      h += '</div>';
+      h += '<button class="wlq-cta" id="wlqSubmit" onclick="wlqSubmit()">' + escHtml(t('submit_btn')) + ' ' + I.arrow + '</button>';
+    }
+
+    h += '</div>';
+    el('wlqSteps').innerHTML = h;
+
+    // Wiring
+    if(sd.type === 'rapid'){
+      sd.fields.forEach(f => {
+        const inp = el('rapid_'+f.key);
+        if(inp){
+          inp.addEventListener('input', e => { ans.rapid[f.key] = e.target.value.trim(); });
+          inp.addEventListener('keydown', e => {
+            if(e.key === 'Enter'){
+              const fields = sd.fields.map(x => el('rapid_'+x.key));
+              const cur = fields.indexOf(inp);
+              if(cur < fields.length - 1){ e.preventDefault(); fields[cur+1].focus(); }
+              else { e.preventDefault(); snd('nxt'); wlqNext(); }
+            }
+          });
+        }
+      });
+      setTimeout(()=>{ const first = el('rapid_'+sd.fields[0].key); if(first) first.focus(); }, 50);
+    }
+    if(sd.type === 'text'){
+      const ti = el('wlqText');
+      if(ti){
+        setTimeout(()=>ti.focus(),50);
+        ti.addEventListener('input', e => {
+          ans[id] = e.target.value.trim();
+          const ok = (sd.minLength||0) === 0 || ans[id].length >= (sd.minLength||0);
+          el('wlqTextCta').classList.toggle('on', ok);
+        });
+      }
+    }
+    if(sd.type === 'message') renderRec();
+    if(sd.type === 'contact') wireForm();
+    if(sd.type === 'single'){
+      const selected = (ans[id] !== undefined) ? sd.options[ans[id]] : null;
+      if(selected && selected.allowText){
+        const ti = el('wlqSingleText');
+        if(ti){
+          setTimeout(()=>ti.focus(),50);
+          ti.addEventListener('input', e => {
+            ans[id+'_text'] = e.target.value.trim();
+            el('wlqSingleCta').classList.toggle('on', e.target.value.trim().length>0);
+          });
+          ti.addEventListener('keydown', e => {
+            if(e.key === 'Enter' && ans[id+'_text']){
+              e.preventDefault(); snd('nxt'); wlqNext();
+            }
+          });
+        }
+      }
+    }
+  }
+
+  // ==================== Handlers ====================
+  window.wlqSingle = function(key, idx){
+    ans[key] = idx;
+    snd('sel');
+    const sd = STEP_DATA[key];
+    const selected = sd.options[idx];
+    const btns = document.querySelectorAll('.wlq-a');
+    btns.forEach(b=>b.classList.remove('selected'));
+    if(btns[idx]) btns[idx].classList.add('selected');
+    if(selected && selected.allowText){
+      setTimeout(render, 300);
+    } else {
+      ans[key+'_text'] = '';
+      setTimeout(()=>{ snd('nxt'); wlqNext(); }, 350);
+    }
+  };
+  window.wlqChip = function(idx){
+    const arr = ans.adjektive;
+    const i = arr.indexOf(idx);
+    if(i>-1){ arr.splice(i,1); snd('ds'); }
+    else {
+      if(arr.length >= 7){ return; }
+      arr.push(idx); snd('ms');
+    }
+    document.querySelectorAll('.wlq-chip').forEach((c,ci)=>c.classList.toggle('selected', arr.includes(ci)));
+    const cta = document.querySelector('.wlq-cta');
+    if(cta) cta.classList.toggle('on', arr.length>0);
+  };
+  window.wlqNext = function(){ if(step<STEPS.length){ step++; render(); } };
+  window.wlqBack = function(){
+    if(step===0){ wlqBackToLanding(); return; }
+    step--; render();
+  };
+
+  // ==================== Recording ====================
+  window.wlqRecMode = function(m){
+    recMode = m; recBlob = null;
+    if(recUrl){ URL.revokeObjectURL(recUrl); recUrl = null; }
+    if(recStream){ recStream.getTracks().forEach(tr=>tr.stop()); recStream = null; }
+    render();
+  };
+
+  function renderRec(){
+    const a = el('wlqRecArea'); if(!a) return;
+    if(recMode === 'text'){
+      a.innerHTML = '<textarea class="wlq-textarea" id="wlqMsgText" placeholder="' + escHtml(t('rec_msg_placeholder')) + '">' + escHtml(ans.messageText||'') + '</textarea>';
+      setTimeout(()=>{
+        const ti = el('wlqMsgText'); if(!ti) return;
+        ti.focus();
+        ti.addEventListener('input', e => {
+          ans.messageText = e.target.value.trim();
+          const skip = el('wlqMsgSkip');
+          if(ans.messageText && ans.messageText.length > 2){
+            if(skip && skip.classList.contains('wlq-skip')){
+              skip.outerHTML = '<button class="wlq-cta on" id="wlqMsgSkip" onclick="snd(\'nxt\');wlqNext()">' + escHtml(t('next')) + ' ' + I.arrow + '</button>';
+            }
+          } else {
+            const cta = el('wlqMsgSkip');
+            if(cta && cta.classList.contains('wlq-cta')){
+              cta.outerHTML = '<button class="wlq-skip" id="wlqMsgSkip" onclick="snd(\'nxt\');wlqNext()">' + escHtml(t('skip')) + '</button>';
+            }
+          }
+        });
+      }, 50);
+      return;
+    }
+    if(recBlob && recUrl){
+      let h = '<div class="wlq-rec-preview">';
+      if(recMode==='video') h += '<video src="'+recUrl+'" controls playsinline></video>';
+      else h += '<audio src="'+recUrl+'" controls></audio>';
+      h += '</div>';
+      h += '<div class="wlq-rec-actions"><button class="wlq-rec-action del" onclick="wlqDelRec()">' + escHtml(t('rec_delete')) + '</button><button class="wlq-rec-action" onclick="wlqDelRec();setTimeout(wlqStartRec,100)">' + escHtml(t('rec_new')) + '</button></div>';
+      a.innerHTML = h;
+      const skip = el('wlqMsgSkip');
+      if(skip) skip.outerHTML = '<button class="wlq-cta on" id="wlqMsgSkip" onclick="snd(\'nxt\');wlqNext()">' + escHtml(t('next')) + ' ' + I.arrow + '</button>';
+    } else {
+      const label = recMode === 'video' ? t('rec_label_video') : t('rec_label_audio');
+      a.innerHTML = '<button class="wlq-rec-btn" onclick="wlqStartRec()">' + (recMode==='video'?I.cam:I.mic) + '</button>'
+        + '<div class="wlq-rec-label">' + escHtml(label) + '</div>';
+    }
+  }
+
+  window.wlqStartRec = function(){
+    const con = recMode==='video' ? {audio:true,video:{facingMode:'user',width:{ideal:640},height:{ideal:480}}} : {audio:true};
+    navigator.mediaDevices.getUserMedia(con).then(stream=>{
+      recStream = stream; recChunks=[];
+      let mt = '';
+      const tries = recMode==='video'
+        ? ['video/webm;codecs=vp9,opus','video/webm','video/mp4']
+        : ['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/aac'];
+      for(const tr of tries){ if(MediaRecorder.isTypeSupported(tr)){ mt=tr; break; } }
+      mediaRec = mt ? new MediaRecorder(stream,{mimeType:mt}) : new MediaRecorder(stream);
+      mediaRec.ondataavailable = e => { if(e.data.size>0) recChunks.push(e.data); };
+      mediaRec.onstop = () => {
+        recBlob = new Blob(recChunks, {type: mediaRec.mimeType||(recMode==='video'?'video/webm':'audio/webm')});
+        if(recUrl) URL.revokeObjectURL(recUrl);
+        recUrl = URL.createObjectURL(recBlob);
+        stream.getTracks().forEach(tr=>tr.stop());
+        recStream = null;
+        clearInterval(recTimer);
+        renderRec();
+      };
+      mediaRec.start();
+      recSecs = 0;
+      recTimer = setInterval(()=>{ recSecs++; const tm=el('wlqRecTimer'); if(tm) tm.textContent=fmtTime(recSecs); }, 1000);
+      const a = el('wlqRecArea');
+      let h = '';
+      if(recMode==='video') h += '<div class="wlq-rec-preview"><video id="wlqRecPrev" autoplay muted playsinline></video></div>';
+      h += '<button class="wlq-rec-btn recording" onclick="wlqStopRec()">' + I.stop + '</button>';
+      h += '<div class="wlq-rec-timer" id="wlqRecTimer">0:00</div>';
+      h += '<div class="wlq-rec-label">' + escHtml(t('rec_stop')) + '</div>';
+      a.innerHTML = h;
+      if(recMode==='video'){ const p = el('wlqRecPrev'); if(p) p.srcObject = stream; }
+    }).catch(()=>{
+      alert(recMode==='video' ? t('rec_perm_video') : t('rec_perm_audio'));
+    });
+  };
+  window.wlqStopRec = function(){ if(mediaRec && mediaRec.state==='recording') mediaRec.stop(); };
+  window.wlqDelRec = function(){
+    recBlob=null;
+    if(recUrl){ URL.revokeObjectURL(recUrl); recUrl=null; }
+    recChunks=[]; recSecs=0;
+    renderRec();
+  };
+
+  // ==================== Contact Form ====================
+  function wireForm(){
+    const check = ()=> {
+      const n = el('wlqName').value.trim();
+      const k = el('wlqKontakt').value.trim();
+      const ok = n.length>1 && k.length>2;
+      el('wlqSubmit').classList.toggle('on', ok);
+    };
+    ['wlqName','wlqKontakt'].forEach(id=>el(id).addEventListener('input', check));
+  }
+
+  // ==================== Supabase ====================
+  function singleValRaw(key){
+    const sd = STEP_DATA[key];
+    if(!sd || ans[key]===undefined || !sd.options || !sd.options[ans[key]]) return null;
+    const o = sd.options[ans[key]];
+    return o.value || (typeof o.label === 'string' ? o.label : o.label.de) || null;
+  }
+
+  async function uploadVoiceToSupabase(blob){
+    const filename = Date.now() + '-' + Math.random().toString(36).slice(2,10) + '.webm';
+    const url = SUPABASE_URL + '/storage/v1/object/gf-voice-messages/' + filename;
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Content-Type': blob.type || (recMode === 'video' ? 'video/webm' : 'audio/webm')
+      },
+      body: blob
+    });
+    if(!resp.ok) throw new Error('Voice upload failed: ' + resp.status);
+    return SUPABASE_URL + '/storage/v1/object/public/gf-voice-messages/' + filename;
+  }
+
+  async function insertGfApplication(payload){
+    const resp = await fetch(SUPABASE_URL + '/rest/v1/rpc/submit_gf_application', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ payload })
+    });
+    if(!resp.ok){
+      const txt = await resp.text();
+      throw new Error('Submit failed: ' + resp.status + ' / ' + txt);
+    }
+  }
+
+  window.wlqSubmit = async function(){
+    if(submitted) return;
+    formData.name = el('wlqName').value.trim();
+    formData.kontakt = el('wlqKontakt').value.trim();
+    if(!formData.name || !formData.kontakt) return;
+    submitted = true;
+    snd('nxt');
+
+    let voiceUrl = null;
+    if(recBlob){
+      try {
+        voiceUrl = await uploadVoiceToSupabase(recBlob);
+      } catch(uploadErr){
+        console.warn('[gf-app] Voice upload failed (continuing):', uploadErr);
+      }
+    }
+
+    const payload = {
+      name: formData.name,
+      kontakt: formData.kontakt,
+      typ: singleValRaw('typ'),
+      adjektive: ans.adjektive.map(i => ADJEKTIVE[i].de),
+      sonntag: singleValRaw('sonntag'),
+      rapid_lieblingswort: ans.rapid.lieblingswort || null,
+      rapid_ohrwurm: ans.rapid.ohrwurm || null,
+      rapid_bag: ans.rapid.bag || null,
+      greenflags: ans.greenflags || null,
+      interesse: ans.interesse || null,
+      love_lang: singleValRaw('love_lang'),
+      happy: ans.happy || null,
+      date_wahl: singleValRaw('date'),
+      date_text: ans.date_text || null,
+      comms: singleValRaw('comms'),
+      rueckfrage: ans.rueckfrage || null,
+      message_type: recBlob ? recMode : (ans.messageText ? 'text' : null),
+      message_text: ans.messageText || null,
+      message_url: voiceUrl,
+      message_duration_sec: recBlob ? recSecs : null,
+      user_agent: navigator.userAgent || null,
+      referrer_url: document.referrer || null
+    };
+
+    try {
+      await insertGfApplication(payload);
+      console.log('[gf-app] Application submitted');
+    } catch(e){
+      console.error('[gf-app] Submit failed:', e);
+      alert(t('send_error'));
+      submitted = false;
+      return;
+    }
+
+    step = STEPS.length;
+    render();
+  };
+
+  function renderSuccess(){
+    const firstName = (formData.name||'').split(/\s+/)[0];
+    const title = t('success_title') + (firstName ? ', ' + escHtml(firstName) : '') + '.';
+    el('wlqSteps').innerHTML = ''
+      + '<div class="wlq-step"><div class="wlq-success">'
+      +   '<div class="wlq-success-icon">' + I.check + '</div>'
+      +   '<h2>' + title + '</h2>'
+      +   '<p>' + escHtml(t('success_p1')) + '</p>'
+      +   '<p style="margin-top:1rem"><strong>' + escHtml(t('success_label')) + '</strong></p>'
+      +   '<p>' + escHtml(t('success_p2')) + '</p>'
+      +   '<div class="wlq-success-actions">'
+      +     '<button class="wlq-skip" onclick="wlqRestart()">' + escHtml(t('success_restart')) + '</button>'
+      +   '</div>'
+      + '</div></div>';
+  }
+
+  window.wlqRestart = function(){
+    screen = 'landing'; step = 0;
+    for(const k of Object.keys(ans)) delete ans[k];
+    ans.adjektive = []; ans.rapid = { lieblingswort:'', ohrwurm:'', bag:'' };
+    formData.name = ''; formData.kontakt = '';
+    recBlob = null; if(recUrl){ URL.revokeObjectURL(recUrl); recUrl = null; }
+    recChunks = []; recSecs = 0; recMode = 'voice';
+    submitted = false;
+    render();
+  };
+
+  // ==================== Init ====================
+  document.documentElement.lang = lang;
+  renderLangToggle();
+  renderFooter();
+  render();
+</script>
+</body>
+</html>
