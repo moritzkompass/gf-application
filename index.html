@@ -69,38 +69,28 @@
     .wlq-wrap { max-width: 100%; min-height: 100dvh; border-radius: 0; box-shadow: none; }
   }
 
-  /* Language Toggle */
+  /* Language Toggle (im Footer, subtil) */
   .wlq-lang {
-    position: absolute;
-    top: 1.1rem;
-    right: 1.2rem;
     display: inline-flex;
-    gap: 2px;
-    padding: 3px;
-    border-radius: 999px;
-    background: rgba(26,20,17,0.05);
-    font-size: 0.68rem;
-    font-weight: 700;
+    gap: 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
     letter-spacing: 0.4px;
-    z-index: 20;
+    align-items: center;
   }
   .wlq-lang-opt {
-    padding: 3px 9px;
-    border-radius: 999px;
     cursor: pointer;
-    color: var(--text-soft);
-    transition: all .2s;
+    color: var(--text-muted);
+    transition: color .2s;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
   }
-  .wlq-lang-opt:hover { color: var(--black); }
-  .wlq-lang-opt.active {
-    background: var(--brand);
-    color: var(--white);
-  }
+  .wlq-lang-opt:hover { color: var(--text-soft); }
+  .wlq-lang-opt.active { color: var(--brand); }
+  .wlq-lang-sep { color: var(--text-muted); opacity: 0.5; }
 
   .wlq-header {
-    padding: 1.25rem 5.5rem 0.75rem 1.5rem;
+    padding: 1.25rem 1.5rem 0.75rem 1.5rem;
     display: flex; align-items: center; gap: 0.75rem;
     flex-shrink: 0;
   }
@@ -662,10 +652,6 @@
 
 <div class="wlq-wrap-outer">
   <div class="wlq-wrap">
-    <div class="wlq-lang" id="wlqLang">
-      <span class="wlq-lang-opt" data-lang="de" onclick="wlqSetLang('de')">DE</span>
-      <span class="wlq-lang-opt" data-lang="en" onclick="wlqSetLang('en')">EN</span>
-    </div>
     <div class="wlq-header" id="wlqHeader" style="display:none">
       <button class="wlq-back" id="wlqBack" onclick="wlqBack()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
@@ -924,9 +910,6 @@
         { label:{ de:'Richtig schöne Geschenke machen',                     en:'Get you really nice gifts' },
           sub:  { de:'Sachen, an die du selbst nicht denkst.',              en:"Things you wouldn't think of yourself." },
           value:'Geschenke' },
-        { label:{ de:'Dich umarmen, ohne dass du fragen musst',             en:'Hug you without you having to ask' },
-          sub:  { de:'Nähe ohne Erklärung.',                                en:'Closeness, no explanation needed.' },
-          value:'Umarmung' },
         { label:{ de:'Was Kleines mitbringen, das beweist: ich höre zu',    en:'Bring you something small that proves I listen' },
           sub:  { de:'Aufmerksamkeit schlägt Preis.',                       en:'Attention beats price.' },
           value:'Aufmerksamkeit' },
@@ -1059,8 +1042,11 @@
   function renderFooter(){
     el('wlqFooterCopy').textContent = t('footer_copyright');
     el('wlqFooterLinks').innerHTML =
-      '<a onclick="alert(STR[lang].footer_imprint_alert)">' + escHtml(t('footer_imprint')) + '</a>' +
-      '<a onclick="alert(STR[lang].footer_privacy_alert)">' + escHtml(t('footer_privacy')) + '</a>';
+      '<div class="wlq-lang" id="wlqLang">'
+      +   '<span class="wlq-lang-opt' + (lang==='de'?' active':'') + '" data-lang="de" onclick="wlqSetLang(\'de\')">DE</span>'
+      +   '<span class="wlq-lang-sep">·</span>'
+      +   '<span class="wlq-lang-opt' + (lang==='en'?' active':'') + '" data-lang="en" onclick="wlqSetLang(\'en\')">EN</span>'
+      + '</div>';
   }
 
   // ==================== Render ====================
@@ -1084,10 +1070,6 @@
       +   '<div class="wlq-trust-logo">' + escHtml(t('trust4')) + '</div>'
       +   '<div class="wlq-trust-logo">' + escHtml(t('trust5')) + '</div>'
       +   '<div class="wlq-trust-logo">' + escHtml(t('trust6')) + '</div>'
-      + '</div>'
-      + '<div class="wlq-landing-signature">'
-      +   '<div class="name">Moritz Kompaß</div>'
-      +   '<div class="role">' + escHtml(t('landing_role')) + '</div>'
       + '</div>'
       + '</div>';
   }
