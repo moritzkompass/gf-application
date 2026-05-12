@@ -786,7 +786,7 @@
   };
 
   // ==================== State ====================
-  const STEPS = ['typ','adjektive','sonntag','schnellrunde','greenflags','interesse','love_lang','happy','date','comms','rueckfrage','message','kontakt'];
+  let STEPS = ['typ','adjektive','sonntag','schnellrunde','greenflags','interesse','love_lang','happy','date','comms','rueckfrage','message','kontakt'];
 
   let screen = 'landing';
   let step = 0;
@@ -796,8 +796,8 @@
   let submitted = false;
   let ac = null;
 
-  // Adjektive — bilingual
-  const ADJEKTIVE = [
+  // Adjektive — bilingual (Fallback wird ggf. durch DB überschrieben)
+  let ADJEKTIVE = [
     { de:'aufgeschlossen',   en:'open-minded' },
     { de:'sarkastisch',      en:'sarcastic' },
     { de:'empathisch',       en:'empathetic' },
@@ -817,8 +817,8 @@
     { de:'leise',            en:'quiet' }
   ];
 
-  // ==================== Quiz Content ====================
-  const STEP_DATA = {
+  // ==================== Quiz Content (Fallback, wird ggf. durch DB überschrieben) ====================
+  let STEP_DATA = {
     typ: {
       type: 'single',
       question: { de:'Was suchst du hier eigentlich?',           en:"So what are you actually here for?" },
@@ -1482,11 +1482,86 @@
     render();
   };
 
+  // ==================== Quiz Loader (DB → Fallback) ====================
+  const QUIZ_CACHE_KEY = 'gf_quiz_steps_v1';
+  const QUIZ_CACHE_TTL = 60_000; // 1 min — picks up admin edits fast
+
+  async function loadQuizSteps() {
+    const skipCache = new URLSearchParams(location.search).get('refresh') === '1';
+    if (skipCache) { try { sessionStorage.removeItem(QUIZ_CACHE_KEY); } catch(e){} }
+    else {
+      try {
+        const cached = sessionStorage.getItem(QUIZ_CACHE_KEY);
+        if (cached) {
+          const p = JSON.parse(cached);
+          if (p && p.payload && p.ts && (Date.now() - p.ts < QUIZ_CACHE_TTL)) return p.payload;
+        }
+      } catch(e){}
+    }
+    try {
+      const ctrl = new AbortController();
+      const tm = setTimeout(() => ctrl.abort(), 1500);
+      const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/get_gf_quiz_steps', {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: '{}',
+        signal: ctrl.signal
+      });
+      clearTimeout(tm);
+      if (!res.ok) return null;
+      const arr = await res.json();
+      if (!Array.isArray(arr) || !arr.length) return null;
+
+      const steps = [];
+      const stepData = {};
+      let adjektive = null;
+      arr.forEach(r => {
+        steps.push(r.step_key);
+        const sd = { type: r.step_type, question: r.question, subtitle: r.subtitle };
+        if (r.options) sd.options = r.options;
+        if (r.fields) sd.fields = r.fields;
+        if (r.placeholder) sd.placeholder = r.placeholder;
+        if (r.min_length) sd.minLength = r.min_length;
+        if (r.skipable) sd.skipable = r.skipable;
+        stepData[r.step_key] = sd;
+        if (r.step_key === 'adjektive' && Array.isArray(r.options)) adjektive = r.options;
+      });
+      const payload = { steps, stepData, adjektive };
+      try { sessionStorage.setItem(QUIZ_CACHE_KEY, JSON.stringify({ payload, ts: Date.now() })); } catch(e){}
+      return payload;
+    } catch(e) {
+      console.warn('[gf-app] quiz_steps RPC failed, using fallback', e);
+      return null;
+    }
+  }
+
+  function applyQuizSteps(p){
+    if (!p) return;
+    if (Array.isArray(p.steps) && p.steps.length) STEPS = p.steps;
+    if (p.stepData && Object.keys(p.stepData).length) STEP_DATA = p.stepData;
+    if (Array.isArray(p.adjektive) && p.adjektive.length) ADJEKTIVE = p.adjektive;
+  }
+
   // ==================== Init ====================
-  document.documentElement.lang = lang;
-  renderLangToggle();
-  renderFooter();
-  render();
+  (async function init(){
+    const fetchPromise = loadQuizSteps();
+    const fast = await Promise.race([
+      fetchPromise,
+      new Promise(r => setTimeout(() => r(null), 250))
+    ]);
+    if (fast) applyQuizSteps(fast);
+    document.documentElement.lang = lang;
+    renderFooter();
+    render();
+    if (!fast) {
+      // background completion — apply when ready (next render picks it up)
+      fetchPromise.then(p => { if (p) applyQuizSteps(p); });
+    }
+  })();
 </script>
 </body>
 </html>
