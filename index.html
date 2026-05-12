@@ -905,12 +905,32 @@
       ]
     },
     happy: {
-      type: 'text',
-      question:   { de:'Wie kann ich dich glücklich machen?',                                              en:'How can I make you happy?' },
-      subtitle:   { de:"Mach's mir leicht. Konkrete Sachen schlagen Floskeln.",                           en:'Make it easy for me. Concrete beats clichés.' },
-      placeholder:{ de:'Wenn ich dir ohne Anlass deine Lieblingsblumen mitbringe. Wenn du heimkommst und das Essen schon fertig ist…',
-                    en:'Bringing you your favorite flowers for no reason. Coming home to dinner already made…' },
-      minLength: 3
+      type: 'single',
+      question: { de:'Wie kann ich dich glücklich machen?',                en:'How can I make you happy?' },
+      subtitle: { de:'Such dir eins aus. Ich nehm das ernst.',              en:'Pick one. I take this seriously.' },
+      options: [
+        { label:{ de:'Frühstück machen, bevor du wach bist',                en:'Make breakfast before you wake up' },
+          sub:  { de:'Acts of Service, höchste Stufe.',                     en:'Acts of service, top tier.' },
+          value:'Frühstück' },
+        { label:{ de:'Dir ungefragt sagen, was ich an dir mag',             en:'Tell you what I love about you, unprompted' },
+          sub:  { de:'Worte. Klare Worte.',                                 en:'Words. Clear words.' },
+          value:'Worte' },
+        { label:{ de:'Spontan ein Wochenende für uns planen',               en:'Plan a spontaneous weekend for us' },
+          sub:  { de:'Ich plane, du kommst einfach mit.',                   en:'I plan, you just come along.' },
+          value:'Wochenende' },
+        { label:{ de:'Dich umarmen, ohne dass du fragen musst',             en:'Hug you without you having to ask' },
+          sub:  { de:'Nähe ohne Erklärung.',                                en:'Closeness, no explanation needed.' },
+          value:'Umarmung' },
+        { label:{ de:'Was Kleines mitbringen, das beweist: ich höre zu',    en:'Bring you something small that proves I listen' },
+          sub:  { de:'Aufmerksamkeit schlägt Preis.',                       en:'Attention beats price.' },
+          value:'Aufmerksamkeit' },
+        { label:{ de:'Den langweiligen Kram für dich erledigen',            en:'Handle the boring stuff for you' },
+          sub:  { de:'Wäsche, Einkauf, Arzttermin. Du musst nicht denken.', en:'Laundry, groceries, doctor stuff. You stop thinking.' },
+          value:'Alltag' },
+        { label:{ de:'Überrasch mich. Was wäre dein Move?',                  en:'Surprise me. What would your move be?' },
+          sub:  { de:'Bonus-Frage. Falls du eigene Ideen hast.',              en:'Bonus question. In case you have your own ideas.' },
+          value:'Überraschung', allowText:true }
+      ]
     },
     date: {
       type: 'single',
@@ -1419,7 +1439,8 @@
       greenflags: ans.greenflags || null,
       interesse: ans.interesse || null,
       love_lang: singleValRaw('love_lang'),
-      happy: ans.happy || null,
+      happy: singleValRaw('happy'),
+      happy_text: ans.happy_text || null,
       date_wahl: singleValRaw('date'),
       date_text: ans.date_text || null,
       comms: singleValRaw('comms'),
